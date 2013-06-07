@@ -26,9 +26,27 @@ class Bandejao {
 
 	const BASE_URL = 'http://www.usp.br/coseas/';
 
-	public function extract_menu($id) {
+	public function get($ids, $options = array()) {
 
-		$text = $this->curl_page(Bandejao::BASE_URL . $this->restaurants[$id][2]);
+		$menu = array();
+
+		if (is_numeric($ids))
+			$ids = array($ids);
+
+		foreach ($ids as $id) {
+			$menu[$this->restaurants[$id][0]] = $this->beautify(
+				$this->parse($id),
+				$options
+			);
+		}
+		
+		return $menu;
+
+	}
+
+	private function parse($id) {
+
+		$text = $this->curl(Bandejao::BASE_URL . $this->restaurants[$id][2]);
 
 		$count = preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
@@ -59,7 +77,13 @@ class Bandejao {
 
 	}
 
-	private function curl_page($url) {
+	private function beautify($menu, $options) {
+
+		return $menu;
+
+	}
+
+	private function curl($url) {
 
 		$curl = curl_init($url); 
 
