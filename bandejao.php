@@ -12,7 +12,7 @@ class Bandejao {
 		array('domingo', 'domingo', 'domingo')
 	);
 
-	var $meals = array(
+	var $times = array(
 		array('almoco', 'almo', 'almoço'),
 		array('jantar', 'j', 'jantar')
 	);
@@ -34,7 +34,7 @@ class Bandejao {
 			$ids = array($ids);
 
 		foreach ($ids as $id) {
-			$menu[$this->restaurants[$id][0]] = $this->beautify(
+			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id),
 				$options
 			);
@@ -61,8 +61,8 @@ class Bandejao {
 			preg_match_all(
 				'/<font[^>]*>(.*?)<\/font>/mis', 
 				strip_tags(
-					str_replace('span', 'font', $t),
-					'<font>'
+					str_replace(array('span', 'div'), 'font', $t),
+					'<font><br><div>'
 				),
 				$m
 			);
@@ -77,9 +77,45 @@ class Bandejao {
 
 	}
 
-	private function beautify($menu, $options) {
+	private function prettify($menu, $options) {
 
-		return $menu;
+		$pretty = array();
+
+		foreach ($menu as $dayId => $day) {
+			foreach ($day as $timeId => $time) {
+				$elems = array();
+				foreach ($time as $elId => $elem) {
+					if ($elId > 0)
+						$elems = array_merge(
+							$elems, 
+							explode('<br>', nl2br($elem, FALSE))
+						);
+				}
+				foreach ($elems as $elId => $elem) {
+					if (stripos($elem, '<font') !== FALSE)
+						$elem = preg_replace("/<font.*?>/i", "$1", $elem);
+					if (strlen($elem) > 3)
+						$elems[$elId] = trim($elem);
+				}
+
+				$dId = (isset($options['day']) && $options['day'] == 'name') ?
+					$this->days[$dayId][0] :
+					$dayId;
+
+				$tId = (isset($options['time']) && $options['time'] == 'name') ?
+					$this->times[$timeId][0] :
+					$timeId;
+
+				$pretty[$dId][$tId] = array_filter($elems);
+
+			}
+		}
+
+		foreach ($pretty as $day)
+			foreach ($day as $time)
+				array_filter($time);
+
+		return $pretty;
 
 	}
 
@@ -96,6 +132,8 @@ class Bandejao {
 
 		$result = curl_exec($curl);
 		curl_close($curl);
+
+		$result = mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
 
 		return $result;
 
