@@ -82,20 +82,28 @@ class Bandejao {
 		$pretty = array();
 
 		foreach ($menu as $dayId => $day) {
+
 			foreach ($day as $timeId => $time) {
+
 				$elems = array();
+
 				foreach ($time as $elId => $elem) {
+
 					if ($elId > 0)
 						$elems = array_merge(
 							$elems, 
 							explode('<br>', nl2br($elem, FALSE))
 						);
 				}
+
 				foreach ($elems as $elId => $elem) {
+
 					if (stripos($elem, '<font') !== FALSE)
 						$elem = preg_replace("/<font.*?>/i", "$1", $elem);
+
 					if (strlen($elem) > 3)
 						$elems[$elId] = trim($elem);
+
 				}
 
 				$dId = (isset($options['day']) && $options['day'] == 'name') ?
@@ -109,6 +117,7 @@ class Bandejao {
 				$pretty[$dId][$tId] = array_filter($elems);
 
 			}
+			
 		}
 
 		foreach ($pretty as $day)
@@ -119,10 +128,11 @@ class Bandejao {
 
 	}
 
-	private function curl($url) {
+	private function curl($url, $fields = array()) {
 
-		$curl = curl_init($url); 
+		$curl = curl_init(); 
 
+		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_FAILONERROR, true); 
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
@@ -130,13 +140,16 @@ class Bandejao {
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);   
 		curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31"); 
 
+		if (!empty($fields)) {
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
+		}
+
 		$result = curl_exec($curl);
 		curl_close($curl);
 
-		$result = mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
+		return mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
 
-		return $result;
-
-	}   
+	}   	
 
 }
