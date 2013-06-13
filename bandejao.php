@@ -25,6 +25,8 @@ class Bandejao {
 	);
 
 	const BASE_URL = 'http://www.usp.br/coseas/';
+	const BALANCE_URL = 'http://uspdigital.usp.br/rucard/autenticar';
+
 
 	public function get($ids, $options = array()) {
 
@@ -117,7 +119,7 @@ class Bandejao {
 				$pretty[$dId][$tId] = array_filter($elems);
 
 			}
-			
+
 		}
 
 		foreach ($pretty as $day)
@@ -125,6 +127,25 @@ class Bandejao {
 				array_filter($time);
 
 		return $pretty;
+
+	}
+
+	public function balance($nusp, $password) {
+
+		$text = $this->curl(
+			Bandejao::BALANCE_URL,
+			array('codpes' => $nusp, 'senusu' => $password)
+		);
+
+		return $text;
+
+		preg_match(
+			'/atual[^<]*<[^>]*>[\s]*<[^>]*>([\d]*)/mis',
+			$text,
+			$balance
+		);
+
+		return $balance;
 
 	}
 
