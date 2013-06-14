@@ -130,7 +130,7 @@ class Bandejao {
 
 	public function balance($nusp, $pass) {
 
-		$filename = sha1($nusp . $pass) . '.txt';
+		$filename = sha1(date('u') . $nusp . $pass) . '.txt';
 
 		$text = $this->curl(Bandejao::SALDO_AUTENTICAR_URL . '?' .
 			http_build_query(array('codpes' => $nusp, 'senusu' => $pass)),
