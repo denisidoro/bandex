@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class Bandejao {
 
@@ -24,9 +24,9 @@ class Bandejao {
 		array('quimica', 'química', 'cardapioquimica.html')
 	);
 
-	const BASE_URL = 'http://www.usp.br/coseas/';
-	const BALANCE_URL = 'http://uspdigital.usp.br/rucard/autenticar';
-
+	const CARDAPIO_BASE_URL = 'http://www.usp.br/coseas/';
+	const SALDO_AUTENTICAR_URL = 'http://uspdigital.usp.br/rucard/autenticar';
+	const SALDO_EXTRATO_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
 
 	public function get($ids, $options = array()) {
 
@@ -48,7 +48,7 @@ class Bandejao {
 
 	private function parse($id) {
 
-		$text = $this->curl(Bandejao::BASE_URL . $this->restaurants[$id][2]);
+		$text = $this->curl(Bandejao::CARDAPIO_BASE_URL . $this->restaurants[$id][2]);
 
 		$count = preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
@@ -89,14 +89,12 @@ class Bandejao {
 
 				$elems = array();
 
-				foreach ($time as $elId => $elem) {
-
+				foreach ($time as $elId => $elem)
 					if ($elId > 0)
 						$elems = array_merge(
 							$elems, 
 							explode('<br>', nl2br($elem, FALSE))
 						);
-				}
 
 				foreach ($elems as $elId => $elem) {
 
@@ -130,14 +128,19 @@ class Bandejao {
 
 	}
 
-	public function balance($nusp, $password) {
+	public function balance($nusp, $pass) {
 
-		$text = $this->curl(
-			Bandejao::BALANCE_URL,
-			array('codpes' => $nusp, 'senusu' => $password)
+		$filename = sha1($nusp . $pass) . '.txt';
+
+		$text = $this->curl(Bandejao::SALDO_AUTENTICAR_URL . '?' .
+			http_build_query(array('codpes' => $nusp, 'senusu' => $pass)),
+			$filename
 		);
 
-		return $text;
+		if (stripos($text, 'extrato') === false)
+			return false;
+
+		$text = $this->curl(Bandejao::SALDO_EXTRATO_URL, $filename);
 
 		preg_match(
 			'/atual[^<]*<[^>]*>[\s]*<[^>]*>([\d]*)/mis',
@@ -145,11 +148,11 @@ class Bandejao {
 			$balance
 		);
 
-		return $balance;
+		return $balance[1];
 
 	}
 
-	private function curl($url, $fields = array()) {
+	private function curl($url, $cookie = '', $fields = array()) {
 
 		$curl = curl_init(); 
 
@@ -161,6 +164,11 @@ class Bandejao {
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);   
 		curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31"); 
 
+		if (!empty($cookie)) {
+			curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); 
+			curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
+		} 
+
 		if (!empty($fields)) {
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
@@ -170,7 +178,7 @@ class Bandejao {
 		curl_close($curl);
 
 		return mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
-
+		
 	}   	
 
 }
