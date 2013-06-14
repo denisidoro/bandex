@@ -50,7 +50,7 @@ class Bandejao {
 
 		$text = $this->curl(Bandejao::CARDAPIO_BASE_URL . $this->restaurants[$id][2]);
 
-		$count = preg_match_all(
+		preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
 			$text,
 			$td
@@ -70,7 +70,7 @@ class Bandejao {
 			);
 
 			foreach ($this->days as $i => $d)
-				if (isset($m[1][0]) && stripos($m[1][0], $d[1]) !== false)
+				if (isset($m[1][0]) && stripos($m[1][0], $d[1]) !== FALSE)
 					$menu[$i][] = $m[1];
 
 		}
@@ -137,8 +137,8 @@ class Bandejao {
 			$filename
 		);
 
-		if (stripos($text, 'extrato') === false)
-			return false;
+		if (stripos($text, 'extrato') === FALSE)
+			return FALSE;
 
 		$text = $this->curl(Bandejao::SALDO_EXTRATO_URL, $filename);
 
@@ -157,20 +157,19 @@ class Bandejao {
 		$curl = curl_init(); 
 
 		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_FAILONERROR, true); 
-		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); 
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);   
-		curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31"); 
-
+		curl_setopt($curl, CURLOPT_FAILONERROR, TRUE); 
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE); 
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); 
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);   
+		
 		if (!empty($cookie)) {
 			curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); 
 			curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
 		} 
 
 		if (!empty($fields)) {
-			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POST, TRUE);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $fields);
 		}
 
