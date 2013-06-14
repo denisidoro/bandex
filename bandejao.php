@@ -12,7 +12,7 @@ class Bandejao {
 		array('domingo', 'domingo', 'domingo')
 	);
 
-	var $times = array(
+	var $meals = array(
 		array('almoco', 'almo', 'almoço'),
 		array('jantar', 'j', 'jantar')
 	);
@@ -24,9 +24,9 @@ class Bandejao {
 		array('quimica', 'química', 'cardapioquimica.html')
 	);
 
-	const CARDAPIO_BASE_URL = 'http://www.usp.br/coseas/';
-	const SALDO_AUTENTICAR_URL = 'http://uspdigital.usp.br/rucard/autenticar';
-	const SALDO_EXTRATO_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
+	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
+	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
+	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
 
 	public function get($ids, $options = array()) {
 
@@ -35,12 +35,11 @@ class Bandejao {
 		if (is_numeric($ids))
 			$ids = array($ids);
 
-		foreach ($ids as $id) {
+		foreach ($ids as $id)
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id),
 				$options
 			);
-		}
 		
 		return $menu;
 
@@ -48,7 +47,7 @@ class Bandejao {
 
 	private function parse($id) {
 
-		$text = $this->curl(Bandejao::CARDAPIO_BASE_URL . $this->restaurants[$id][2]);
+		$text = $this->curl(Bandejao::MENU_BASE_URL . $this->restaurants[$id][2]);
 
 		preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
@@ -111,7 +110,7 @@ class Bandejao {
 					$dayId;
 
 				$tId = (isset($options['time']) && $options['time'] == 'name') ?
-					$this->times[$timeId][0] :
+					$this->meals[$timeId][0] :
 					$timeId;
 
 				$pretty[$dId][$tId] = array_filter($elems);
@@ -132,7 +131,7 @@ class Bandejao {
 
 		$filename = sha1(date('u') . $nusp . $pass) . '.txt';
 
-		$text = $this->curl(Bandejao::SALDO_AUTENTICAR_URL . '?' .
+		$text = $this->curl(Bandejao::BALANCE_AUTH_URL . '?' .
 			http_build_query(array('codpes' => $nusp, 'senusu' => $pass)),
 			$filename
 		);
@@ -140,7 +139,7 @@ class Bandejao {
 		if (stripos($text, 'extrato') === FALSE)
 			return FALSE;
 
-		$text = $this->curl(Bandejao::SALDO_EXTRATO_URL, $filename);
+		$text = $this->curl(Bandejao::BALANCE_EXTRACT_URL, $filename);
 
 		preg_match(
 			'/atual[^<]*<[^>]*>[\s]*<[^>]*>([\d]*)/mis',
@@ -162,7 +161,7 @@ class Bandejao {
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE); 
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE); 
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);   
-		
+
 		if (!empty($cookie)) {
 			curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); 
 			curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
