@@ -35,12 +35,13 @@ class Bandejao {
 		if (is_numeric($ids))
 			$ids = array($ids);
 
-		$options = sanitize($options);
+		$options = $this->sanitize($options);
 
 		foreach ($ids as $id)
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id, $options['format']),
 				$options
+			);
 			   		
 		return $menu;
 
