@@ -30,6 +30,7 @@ class Bandejao {
 	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
 	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
 	const TIME_FORMAT = 'd-m-Y';
+	const IMPLODE_SUBSTR = '<br>';
 
 	public function get($ids, $options = array()) {
 
@@ -135,6 +136,8 @@ class Bandejao {
 
 				}
 
+				$elems = array_filter($elems);
+
 				$dId = ($options['day'] == 'name') ?
 					date($options['format'], strtotime($this->start_date) + 24*60*60*$dayId) :
 					$dayId;
@@ -143,7 +146,9 @@ class Bandejao {
 					$this->meals[$mealId][0] :
 					$mealId;
 
-				$pretty[$dId][$tId] = array_filter($elems);
+				$pretty[$dId][$tId] = ($options['implode'] == TRUE) ?
+					implode(Bandejao::IMPLODE_SUBSTR, $elems) :
+					$elems;
 
 			}
 
@@ -151,7 +156,8 @@ class Bandejao {
 
 		foreach ($pretty as $day)
 			foreach ($day as $meal)
-				array_filter($meal);
+				if (is_array($meal))
+					array_filter($meal);
 
 		return $pretty;
 
@@ -186,7 +192,8 @@ class Bandejao {
 		$default = array(
 			'day' => 'name',
 			'meal' => 'name',
-			'format' => Bandejao::TIME_FORMAT
+			'format' => Bandejao::TIME_FORMAT,
+			'implode' => FALSE
 		);
 
 		foreach ($default as $key => $value)
