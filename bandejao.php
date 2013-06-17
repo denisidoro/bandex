@@ -108,11 +108,11 @@ class Bandejao {
 
 		foreach ($menu as $dayId => $day) {
 
-			foreach ($day as $timeId => $time) {
+			foreach ($day as $mealId => $meal) {
 
 				$elems = array();
 
-				foreach ($time as $elId => $elem)
+				foreach ($meal as $elId => $elem)
 					if ($elId > 0)
 						$elems = array_merge(
 							$elems, 
@@ -133,9 +133,9 @@ class Bandejao {
 					date($options['format'], strtotime($this->start_date) + 24*60*60*$dayId) :
 					$dayId;
 
-				$tId = ($options['time'] == 'name') ?
-					$this->meals[$timeId][0] :
-					$timeId;
+				$tId = ($options['meal'] == 'name') ?
+					$this->meals[$mealId][0] :
+					$mealId;
 
 				$pretty[$dId][$tId] = array_filter($elems);
 
@@ -144,8 +144,8 @@ class Bandejao {
 		}
 
 		foreach ($pretty as $day)
-			foreach ($day as $time)
-				array_filter($time);
+			foreach ($day as $meal)
+				array_filter($meal);
 
 		return $pretty;
 
@@ -179,7 +179,7 @@ class Bandejao {
 
 		$default = array(
 			'day' => 'name',
-			'time' => 'name',
+			'meal' => 'name',
 			'format' => Bandejao::TIME_FORMAT
 		);
 
