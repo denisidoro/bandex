@@ -24,9 +24,12 @@ class Bandejao {
 		array('quimica', 'química', 'cardapioquimica.html')
 	);
 
+	var $start_date = NULL;
+
 	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
 	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
 	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
+	const TIME_FORMAT = 'd-m-Y';
 
 	public function get($ids, $options = array()) {
 
@@ -39,7 +42,7 @@ class Bandejao {
 
 		foreach ($ids as $id)
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
-				$this->parse($id, $options['format']),
+				$this->parse($id),
 				$options
 			);
 			   		
@@ -47,7 +50,7 @@ class Bandejao {
 
 	}
 
-	private function parse($id, $format) {
+	private function parse($id) {
 
 		$text = $this->curl(Bandejao::MENU_BASE_URL . $this->restaurants[$id][2]);
 
@@ -64,12 +67,11 @@ class Bandejao {
 			if (substr_count($period[$i], '/'))
 				$period[$i] .= '/' . date('Y');
 
-			$period[$i] =  date($format, strtotime(str_replace('/', '-', $period[$i])));
+			$period[$i] = date(Bandejao::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
 
 		}
 
-		for ($i = 0; $i < 7; $i++)
-			echo date($format, strtotime($period[1]) + 24*60*60*$i), '<br>';
+		$this->start_date = $period[1];
 
 		preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
@@ -127,11 +129,11 @@ class Bandejao {
 
 				}
 
-				$dId = (isset($options['day']) && $options['day'] == 'name') ?
-					$this->days[$dayId][0] :
+				$dId = ($options['day'] == 'name') ?
+					date($options['format'], strtotime($this->start_date) + 24*60*60*$dayId) :
 					$dayId;
 
-				$tId = (isset($options['time']) && $options['time'] == 'name') ?
+				$tId = ($options['time'] == 'name') ?
 					$this->meals[$timeId][0] :
 					$timeId;
 
@@ -178,12 +180,14 @@ class Bandejao {
 		$default = array(
 			'day' => 'name',
 			'time' => 'name',
-			'format' => 'd-m-Y'
+			'format' => Bandejao::TIME_FORMAT
 		);
 
 		foreach ($default as $key => $value)
 			if (!isset($options[$key]))
 				$options[$key] = $value;
+
+		return $options;
 
 	}
 
