@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class Bandejao {
 
@@ -27,6 +27,7 @@ class Bandejao {
 	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
 	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
 	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
+	const TIME_FORMAT = 'd-m-Y';
 
 	public function get($ids, $options = array()) {
 
@@ -39,8 +40,7 @@ class Bandejao {
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id),
 				$options
-			);
-		
+			   		
 		return $menu;
 
 	}
@@ -48,6 +48,26 @@ class Bandejao {
 	private function parse($id) {
 
 		$text = $this->curl(Bandejao::MENU_BASE_URL . $this->restaurants[$id][2]);
+
+		preg_match(
+			'/semana[^\d]+([\d\/]*)[^\d]*([\d\/]*)/i', 
+			$text, 
+			$period
+		);		
+
+		unset($period[0]);
+
+		for ($i = 1; $i <= count($period); $i++) {
+
+			if (substr_count($period[$i], '/'))
+				$period[$i] .= '/' . date('Y');
+
+			$period[$i] =  date(Bandejao::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
+
+		}
+
+		for ($i = 0; $i < 7; $i++)
+			echo date(Bandejao::TIME_FORMAT, strtotime($period[1]) + 24*60*60*$i), '<br>';
 
 		preg_match_all(
 			'/<td[^>]*>(.*?)<\/td>/mis', 
