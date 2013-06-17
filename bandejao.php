@@ -215,8 +215,19 @@ class Bandejao {
 		$result = curl_exec($curl);
 		curl_close($curl);
 
-		return mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
+		return $this->convert_encoding($result);
 		
 	}   	
+
+	private function convert_encoding($content) { 
+
+	    if (!mb_check_encoding($content, 'UTF-8') || !($content === mb_convert_encoding(mb_convert_encoding($content, 'UTF-32', 'UTF-8' ), 'UTF-8', 'UTF-32'))) { 
+	        $content = mb_convert_encoding($content, 'UTF-8'); 
+	        //if (mb_check_encoding($content, 'UTF-8'))
+	    } 
+
+	    return $content; 
+
+	} 
 
 }
