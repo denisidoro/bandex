@@ -64,8 +64,14 @@ class Bandejao {
 
 		for ($i = 1; $i <= count($period); $i++) {
 
-			if (substr_count($period[$i], '/'))
-				$period[$i] .= '/' . date('Y');
+			switch (substr_count($period[$i], '/')) {
+				case 1: 
+					$period[$i] .= date('\/Y');
+					break;
+				case 0:
+					$period[$i] .= date('\/m\/Y');
+					break;
+			}				
 
 			$period[$i] = date(Bandejao::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
 
