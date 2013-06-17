@@ -35,6 +35,8 @@ class Bandejao {
 		if (is_numeric($ids))
 			$ids = array($ids);
 
+		$options = sanitize($options);
+
 		foreach ($ids as $id)
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id, $options['format']),
@@ -167,6 +169,20 @@ class Bandejao {
 		);
 
 		return $balance[1];
+
+	}
+
+	private function sanitize($options) {
+
+		$default = array(
+			'day' => 'name',
+			'time' => 'name',
+			'format' => 'd-m-Y'
+		);
+
+		foreach ($default as $key => $value)
+			if (!isset($options[$key]))
+				$options[$key] = $value;
 
 	}
 
