@@ -4,12 +4,8 @@ API em PHP para obter os cardápios dos bandejões da USP de Butantã.
 
 Para retornar o cardápio do restaurante da Química, por exemplo, basta escrever
 ```php
-get('quimica');
-```
-
-Já para os bandejões da Física e da Prefeitura, fica:
-```php
-get('fisica,prefeitura');
+get('quimica'); // Bandejão da Química
+get('fisica,prefeitura'); // Bandejões da Física e da Prefeitura
 ```
 
 Os restaurantes podem ser `central`, `fisica`, `prefeitura`, `quimica` ou `clube`.
@@ -46,4 +42,4 @@ Onde:
  
 
 [date]: http://php.net/manual/en/function.date.php
-[rucard]: https://uspdigital.usp.br/rucard/‎
+[rucard]: https://uspdigital.usp.br/rucard
