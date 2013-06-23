@@ -24,8 +24,8 @@ get($restaurants, $options);
 
 Onde `$options` é uma array com os possíveis parâmetros:
 
-* `days`: array com os índices dos dias cujos cardápios serão retornados, variando de 0 (segunda-feira) até 6 (domingo);
-* `meals`: array com os índices das refeições cujos cardápios serão retornados, assumindo 0 (almoço) ou 1 (jantar);
+* `days`: array com os índices dos dias cujos cardápios serão retornados, variando de `0` (segunda-feira) até `6` (domingo). Caso seja `-1`, retorna o índice do dia atual;
+* `meals`: array com os índices das refeições cujos cardápios serão retornados, assumindo `0` (almoço) ou `1` (jantar). Caso seja `-1`, retorna o índice da refeição atual;
 * `time_format`: formato de tempo, segundo as [convenções em PHP] [date], para os dias da semana;
 * `meal_format`: formato utilizado para as identificar as refeições, podendo ser `numeric`;
 * `implode`: se `TRUE`, compacta os resultados em arrays de um elemento, apenas.

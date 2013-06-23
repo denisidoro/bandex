@@ -32,6 +32,10 @@ class Bandejao {
 	const TIME_FORMAT = 'd-m-Y';
 	const IMPLODE_SUBSTR = '<br>';
 
+	public function Bandejao() {
+		date_default_timezone_set('America/Sao_Paulo');
+	}
+
 	public function get($ids, $options = array()) {
 
 		$menu = array();
@@ -222,6 +226,36 @@ class Bandejao {
 			if (!isset($options[$key]))
 				$options[$key] = $value;
 
+		return ($options['days'] < 0 || $options['meals'] < 0) ?
+			$this->guess_time($options) :
+			$options;
+
+	}
+
+	private function guess_time($options, $offset = 0) {
+
+		$offset = 24*60*60;
+		$time = time() + $offset;
+
+		$hour = date('H', $time);
+		$weekday = date('N', $time) - 1;
+
+		$meal = ($hour >= 15 && $hour < 20) ? 1 : 0;
+
+		if ($hour >= 20)
+			$weekday = ($weekday + 1)%7;
+
+		if ($meal == 1 && $weekday >= 5) {
+			$meal = 0;
+			$weekday = ($weekday + 1)%7;
+		}
+
+		if ($options['days'] < 0)
+			$options['days'] = array($weekday);
+
+		if ($options['meals'] < 0)
+			$options['meals'] = array($meal);
+
 		return $options;
 
 	}
@@ -258,7 +292,6 @@ class Bandejao {
 
 	    if (!mb_check_encoding($content, 'UTF-8') || !($content === mb_convert_encoding(mb_convert_encoding($content, 'UTF-32', 'UTF-8' ), 'UTF-8', 'UTF-32'))) { 
 	        $content = mb_convert_encoding($content, 'UTF-8'); 
-	        //if (mb_check_encoding($content, 'UTF-8'))
 	    } 
 
 	    return $content; 
