@@ -110,12 +110,18 @@ class Bandejao {
 	}
 
 	private function prettify($menu, $options) {
-
+	
 		$pretty = array();
 
 		foreach ($menu as $dayId => $day) {
+		
+			if (!in_array($dayId, $options['days']))
+				continue;
 
 			foreach ($day as $mealId => $meal) {
+					
+				if (!in_array($mealId, $options['meals']))
+					continue;
 
 				$elems = array();
 
@@ -138,15 +144,15 @@ class Bandejao {
 
 				$elems = array_filter($elems);
 
-				$dId = ($options['day'] == 'name') ?
-					date($options['format'], strtotime($this->start_date) + 24*60*60*$dayId) :
+				$dId = ($options['time_format'] != 'numeric') ?
+					date($options['time_format'], strtotime($this->start_date) + 24*60*60*$dayId) :
 					$dayId;
 
-				$tId = ($options['meal'] == 'name') ?
+				$mId = ($options['meal_format'] == 'name') ?
 					$this->meals[$mealId][0] :
 					$mealId;
 
-				$pretty[$dId][$tId] = ($options['implode'] == TRUE) ?
+				$pretty[$dId][$mId] = ($options['implode'] == TRUE) ?
 					implode(Bandejao::IMPLODE_SUBSTR, $elems) :
 					$elems;
 
@@ -158,7 +164,7 @@ class Bandejao {
 			foreach ($day as $meal)
 				if (is_array($meal))
 					array_filter($meal);
-
+					
 		return $pretty;
 
 	}
@@ -190,10 +196,11 @@ class Bandejao {
 	private function sanitize($options) {
 
 		$default = array(
-			'day' => 'name',
-			'meal' => 'name',
-			'format' => Bandejao::TIME_FORMAT,
-			'implode' => FALSE
+			'time_format' => Bandejao::TIME_FORMAT,
+			'meal_format' => 'name',
+			'implode' => FALSE,
+			'days' => range(0, 6),
+			'meals' => range(0, 1)
 		);
 
 		foreach ($default as $key => $value)
