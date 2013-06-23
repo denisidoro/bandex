@@ -29,6 +29,21 @@ Onde `$options` é uma array com os possíveis parâmetros:
 * `time_format`: formato de tempo, segundo as [convenções em PHP] [date], para os dias da semana;
 * `meal_format`: formato utilizado para as identificar as refeições, podendo ser `numeric`;
 * `implode`: se `TRUE`, compacta os resultados em arrays de um elemento, apenas.
+
+
+### Retornar saldo
+
+Para visualizar o saldo disponível na carteirinha USP , basta escrever
+```php
+balance($nusp, $password);
+```
+
+Onde:
+
+* `$nusp` é o número USP do usuário
+* `$password` é a senha do usuário na página do [Rucard] [rucard]
+
  
 
 [date]: http://php.net/manual/en/function.date.php
+[rucard]: https://uspdigital.usp.br/rucard/‎
