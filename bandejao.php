@@ -36,16 +36,31 @@ class Bandejao {
 
 		$menu = array();
 
-		if (is_numeric($ids))
-			$ids = array($ids);
+		if (!is_array($ids)) {
+			if (stripos($ids, '|') !== FALSE)
+				$ids = explode('|', $ids);
+			else
+				$ids = array($ids);
+		}
 
 		$options = $this->sanitize($options);
 
-		foreach ($ids as $id)
+		foreach ($ids as $id) {
+
+			if (!is_numeric($id)) {
+				foreach ($this->restaurants as $rId => $r)
+					if ($r[0] == $id) {
+						$id = $rId;
+						break;
+					}
+			}
+
 			$menu[$this->restaurants[$id][0]] = $this->prettify(
 				$this->parse($id),
 				$options
 			);
+
+		}
 			   		
 		return $menu;
 
