@@ -1,6 +1,6 @@
 <?php
 
-class Bandejao {
+class Bandex {
 
 	var $days = array(
 		array('segunda', 'segunda', 'segunda-feira'),
@@ -33,7 +33,7 @@ class Bandejao {
 	const TIME_FORMAT = 'd-m-Y';
 	const IMPLODE_SUBSTR = '<br>';
 
-	public function Bandejao() {
+	public function Bandex() {
 		date_default_timezone_set('America/Sao_Paulo');
 	}
 
@@ -73,7 +73,7 @@ class Bandejao {
 
 	private function parse($id) {
 
-		$text = $this->curl(Bandejao::MENU_BASE_URL . $this->restaurants[$id][2]);
+		$text = $this->curl(bandex::MENU_BASE_URL . $this->restaurants[$id][2]);
 
 		preg_match(
 			'/semana[^\d]+([\d\/]*)[^\d]*([\d\/]*)/i', 
@@ -94,7 +94,7 @@ class Bandejao {
 					break;
 			}				
 
-			$period[$i] = date(Bandejao::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
+			$period[$i] = date(bandex::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
 
 		}
 
@@ -173,7 +173,7 @@ class Bandejao {
 					$mealId;
 
 				$pretty[$dId][$mId] = ($options['implode'] == TRUE) ?
-					implode(Bandejao::IMPLODE_SUBSTR, $elems) :
+					implode(bandex::IMPLODE_SUBSTR, $elems) :
 					$elems;
 
 			}
@@ -193,7 +193,7 @@ class Bandejao {
 
 		$filename = sha1(date('u') . $nusp . $pass) . '.txt';
 
-		$text = $this->curl(Bandejao::BALANCE_AUTH_URL . '?' .
+		$text = $this->curl(bandex::BALANCE_AUTH_URL . '?' .
 			http_build_query(array('codpes' => $nusp, 'senusu' => $pass)),
 			$filename
 		);
@@ -201,7 +201,7 @@ class Bandejao {
 		if (stripos($text, 'extrato') === FALSE)
 			return FALSE;
 
-		$text = $this->curl(Bandejao::BALANCE_EXTRACT_URL, $filename);
+		$text = $this->curl(bandex::BALANCE_EXTRACT_URL, $filename);
 
 		preg_match(
 			'/atual[^<]*<[^>]*>[\s]*<[^>]*>([\d]*)/mis',
@@ -216,7 +216,7 @@ class Bandejao {
 	private function sanitize($options) {
 
 		$default = array(
-			'time_format' => Bandejao::TIME_FORMAT,
+			'time_format' => bandex::TIME_FORMAT,
 			'meal_format' => 'name',
 			'implode' => FALSE,
 			'days' => range(0, 6),
