@@ -9,7 +9,7 @@ get('quimica');
 
 Já para os bandejões da Física e da Prefeitura, fica:
 ```php
-get('fisica|prefeitura');
+get('fisica,prefeitura');
 ```
 
 Os restaurantes podem ser `central`, `fisica`, `prefeitura` ou `quimica`.

@@ -37,8 +37,8 @@ class Bandejao {
 		$menu = array();
 
 		if (!is_array($ids)) {
-			if (stripos($ids, '|') !== FALSE)
-				$ids = explode('|', $ids);
+			if (stripos($ids, ',') !== FALSE)
+				$ids = explode(',', $ids);
 			else
 				$ids = array($ids);
 		}
@@ -49,7 +49,7 @@ class Bandejao {
 
 			if (!is_numeric($id)) {
 				foreach ($this->restaurants as $rId => $r)
-					if ($r[0] == $id) {
+					if ($r[0] == trim($id)) {
 						$id = $rId;
 						break;
 					}
