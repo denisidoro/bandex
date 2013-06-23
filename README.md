@@ -2,6 +2,8 @@
 
 API em PHP para obter os cardápios dos bandejões da USP de Butantã.
 
+### Uso básico
+
 Para retornar o cardápio do restaurante da Química, por exemplo, basta escrever
 ```php
 get('quimica'); // Bandejão da Química
@@ -39,7 +41,16 @@ Onde:
 * `$nusp`: número USP do usuário
 * `$password`: senha do usuário na página do [Rucard] [rucard]
 
+
+### Servidor dedicado
  
+Você pode utilizar diretamente a API através do [servidor dedicado] [api]. As funções são homônimas às da classe e os parâmetros são passados via GET. Exemplos:
+
+```
+http://api-bitcluster.rhcloud.com/bandejao/get?restaurants=quimica
+http://api-bitcluster.rhcloud.com/bandejao/balance?nusp=123456789&pass=senha
+```
 
 [date]: http://php.net/manual/en/function.date.php
 [rucard]: https://uspdigital.usp.br/rucard
+[api]: http://api-bitcluster.rhcloud.com
