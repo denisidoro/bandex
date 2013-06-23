@@ -36,8 +36,8 @@ balance($nusp, $password);
 
 Onde:
 
-* `$nusp` é o número USP do usuário
-* `$password` é a senha do usuário na página do [Rucard] [rucard]
+* `$nusp`: número USP do usuário
+* `$password`: senha do usuário na página do [Rucard] [rucard]
 
  
 
