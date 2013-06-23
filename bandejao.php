@@ -21,7 +21,8 @@ class Bandejao {
 		array('central', 'central', 'cardapio.html'),
 		array('fisica', 'física', 'cardapiofisica.html'),
 		array('prefeitura', 'prefeitura', 'cardcocesp.html'),
-		array('quimica', 'química', 'cardapioquimica.html')
+		array('quimica', 'química', 'cardapioquimica.html'),
+		array('clube', 'clube da universidade', 'carddoc.html')
 	);
 
 	var $start_date = NULL;

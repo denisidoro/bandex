@@ -12,7 +12,7 @@ Já para os bandejões da Física e da Prefeitura, fica:
 get('fisica,prefeitura');
 ```
 
-Os restaurantes podem ser `central`, `fisica`, `prefeitura` ou `quimica`.
+Os restaurantes podem ser `central`, `fisica`, `prefeitura`, `quimica` ou `clube`.
 
 
 ### Opções
