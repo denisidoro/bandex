@@ -1,8 +1,8 @@
 <?
 
-require_once("bandex.php");
+require_once("bandexUSP.php");
 
-$bandex = new Bandex();
+$bandex = new BandexUSP();
 
 $options = array(
 	'days' => -1,
