@@ -7,7 +7,8 @@ $bandexUSP = new BandexUSP();
 $options = array(
 	'days' => -1,
 	'meals' => -1,
-	'meal_format' => 'numeric'
+	'meal_format' => 'numeric',
+	'implode' => TRUE
 );
 
 echo "<h3>Cardápio do bandejão central da USP para a refeição atual</h3>";

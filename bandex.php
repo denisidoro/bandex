@@ -3,6 +3,7 @@
 class Bandex {
 
 	const TIME_FORMAT = 'd-m-Y';
+	const IMPLODE_SUBSTR = '<br>';
 
 	protected function sanitize($options) {
 

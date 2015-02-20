@@ -109,7 +109,9 @@ class BandexECP extends Bandex {
 					$meal = $mealId;
 				if (!in_array($mealId - 1, $this->options['meals']))
 					continue;
-				$dMenu[$meal] = $mealMenu;
+				$dMenu[$meal] = ($this->options['implode'] == TRUE) ?
+					implode(bandex::IMPLODE_SUBSTR, $mealMenu) :
+					$mealMenu;
 			}
 
 			$r[$day] = $dMenu;

@@ -36,7 +36,6 @@ class BandexUSP extends Bandex {
 	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
 	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
 	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
-	const IMPLODE_SUBSTR = '<br>';
 	
 	public function get($ids, $options = array()) {
 
@@ -168,7 +167,7 @@ class BandexUSP extends Bandex {
 					$mealId;
 
 				$pretty[$dId][$mId] = ($options['implode'] == TRUE) ?
-					implode(bandexUSP::IMPLODE_SUBSTR, $elems) :
+					implode(bandex::IMPLODE_SUBSTR, $elems) :
 					$elems;
 
 			}
