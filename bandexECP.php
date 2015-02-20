@@ -20,6 +20,8 @@ class BandexECP extends Bandex {
 
 		// get options with default values filled and treat IDs
 		$options = $this->sanitize($options);
+		if ($options['days'] == array(6))
+			$options['days'] = array(1);
 		$this->options = $options;
 		$ids = $this->treatIDs($ids);
 
@@ -83,7 +85,8 @@ class BandexECP extends Bandex {
 	private function format($t) {
 		$d = explode(" ", $t);
 		$d = implode(" ", array_slice($d, 3, 3));
-		$date = strtotime(strtr(strtolower($d), array('janvier'=>'jan','février'=>'feb','mars'=>'march','avril'=>'apr','mai'=>'may','juin'=>'jun','juillet'=>'jul','août'=>'aug','septembre'=>'sep','octobre'=>'oct','novembre'=>'nov','décembre'=>'dec'))); 
+		$d = strtr(utf8_decode($d), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+		$date = strtotime(strtr(strtolower($d), array('janvier'=>'jan','fevrier'=>'feb','mars'=>'march','avril'=>'apr','mai'=>'may','juin'=>'jun','juillet'=>'jul','aout'=>'aug','septembre'=>'sep','octobre'=>'oct','novembre'=>'nov','decembre'=>'dec'))); 
 		return date($this->options['time_format'], $date);
 	}
 
