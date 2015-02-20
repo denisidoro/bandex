@@ -2,40 +2,7 @@
 
 class Bandex {
 
-	var $days = array(
-		array('segunda', 'segunda', 'segunda-feira'),
-		array('terca', 'ter', 'terça-feira'),
-		array('quarta', 'quarta', 'quarta-feira'),
-		array('quinta', 'quinta', 'quinta-feira'),
-		array('sexta', 'sexta', 'sexta'),
-		array('sabado', 'bado', 'sábado'),
-		array('domingo', 'domingo', 'domingo')
-	);
-
-	var $meals = array(
-		array('almoco', 'almo', 'almoço'),
-		array('jantar', 'j', 'jantar')
-	);
-
-	var $restaurants = array(
-		array('central', 'central', 'cardapio.html'),
-		array('fisica', 'física', 'cardapiofisica.html'),
-		array('prefeitura', 'prefeitura', 'cardcocesp.html'),
-		array('quimica', 'química', 'cardapioquimica.html'),
-		array('clube', 'clube da universidade', 'carddoc.html')
-	);
-
-	var $start_date = NULL;
-
-	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
-	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
-	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
 	const TIME_FORMAT = 'd-m-Y';
-	const IMPLODE_SUBSTR = '<br>';
-
-	public function Bandex() {
-		date_default_timezone_set('America/Sao_Paulo');
-	}
 
 	protected function sanitize($options) {
 
@@ -85,6 +52,19 @@ class Bandex {
 
 	}
 
+	protected function treatIDs($ids) {
+
+		if (!is_array($ids)) {
+			if (stripos($ids, ',') !== FALSE)
+				$ids = explode(',', $ids);
+			else
+				$ids = array($ids);
+		}
+
+		return $ids;
+
+	}
+
 	protected function curl($url, $cookie = '', $fields = array()) {
 
 		$curl = curl_init(); 
@@ -97,6 +77,7 @@ class Bandex {
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);   
 
 		if (!empty($cookie)) {
+			echo $cookie;
 			curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); 
 			curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
 		} 

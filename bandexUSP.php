@@ -3,18 +3,46 @@
 require_once("bandex.php");
 
 class BandexUSP extends Bandex {
+
+	public function BandexUSP() {
+		date_default_timezone_set('America/Sao_Paulo');
+	}
+
+	var $days = array(
+		array('segunda', 'segunda', 'segunda-feira'),
+		array('terca', 'ter', 'terça-feira'),
+		array('quarta', 'quarta', 'quarta-feira'),
+		array('quinta', 'quinta', 'quinta-feira'),
+		array('sexta', 'sexta', 'sexta'),
+		array('sabado', 'bado', 'sábado'),
+		array('domingo', 'domingo', 'domingo')
+	);
+
+	var $meals = array(
+		array('almoco', 'almo', 'almoço'),
+		array('jantar', 'j', 'jantar')
+	);
+
+	var $restaurants = array(
+		array('central', 'central', 'cardapio.html'),
+		array('fisica', 'física', 'cardapiofisica.html'),
+		array('prefeitura', 'prefeitura', 'cardcocesp.html'),
+		array('quimica', 'química', 'cardapioquimica.html'),
+		array('clube', 'clube da universidade', 'carddoc.html')
+	);
+
+	var $start_date = NULL;
+
+	const MENU_BASE_URL = 'http://www.usp.br/coseas/';
+	const BALANCE_AUTH_URL = 'http://uspdigital.usp.br/rucard/autenticar';
+	const BALANCE_EXTRACT_URL = 'http://uspdigital.usp.br/rucard/extratoListar?codmnu=12';
+	const IMPLODE_SUBSTR = '<br>';
 	
 	public function get($ids, $options = array()) {
 
 		$menu = array();
 
-		if (!is_array($ids)) {
-			if (stripos($ids, ',') !== FALSE)
-				$ids = explode(',', $ids);
-			else
-				$ids = array($ids);
-		}
-
+		$ids = $this->treatIDs($ids);
 		$options = $this->sanitize($options);
 
 		foreach ($ids as $id) {
@@ -40,8 +68,8 @@ class BandexUSP extends Bandex {
 
 	private function parse($id) {
 
-		$text = $this->curl(bandex::MENU_BASE_URL . $this->restaurants[$id][2]);
-
+		$text = $this->curl(bandexUSP::MENU_BASE_URL . $this->restaurants[$id][2]);
+ 
 		preg_match(
 			'/semana[^\d]+([\d\/]*)[^\d]*([\d\/]*)/i', 
 			$text, 
@@ -61,7 +89,7 @@ class BandexUSP extends Bandex {
 					break;
 			}				
 
-			$period[$i] = date(bandex::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
+			$period[$i] = date(bandexUSP::TIME_FORMAT, strtotime(str_replace('/', '-', $period[$i])));
 
 		}
 
@@ -140,7 +168,7 @@ class BandexUSP extends Bandex {
 					$mealId;
 
 				$pretty[$dId][$mId] = ($options['implode'] == TRUE) ?
-					implode(bandex::IMPLODE_SUBSTR, $elems) :
+					implode(bandexUSP::IMPLODE_SUBSTR, $elems) :
 					$elems;
 
 			}
@@ -160,7 +188,7 @@ class BandexUSP extends Bandex {
 
 		$filename = sha1(date('u') . $nusp . $pass) . '.txt';
 
-		$text = $this->curl(bandex::BALANCE_AUTH_URL . '?' .
+		$text = $this->curl(bandexUSP::BALANCE_AUTH_URL . '?' .
 			http_build_query(array('codpes' => $nusp, 'senusu' => $pass)),
 			$filename
 		);
@@ -168,7 +196,7 @@ class BandexUSP extends Bandex {
 		if (stripos($text, 'extrato') === FALSE)
 			return FALSE;
 
-		$text = $this->curl(bandex::BALANCE_EXTRACT_URL, $filename);
+		$text = $this->curl(bandexUSP::BALANCE_EXTRACT_URL, $filename);
 
 		preg_match(
 			'/atual[^<]*<[^>]*>[\s]*<[^>]*>([\d]*)/mis',

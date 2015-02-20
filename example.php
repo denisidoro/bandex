@@ -2,14 +2,26 @@
 
 require_once("bandexUSP.php");
 
-$bandex = new BandexUSP();
+$bandexUSP = new BandexUSP();
 
 $options = array(
 	'days' => -1,
-	'meals' => -1
+	'meals' => -1,
+	'meal_format' => 'numeric'
 );
 
-echo "<h3>Cardápio do bandejão central para a refeição atual</h3>";
+echo "<h3>Cardápio do bandejão central da USP para a refeição atual</h3>";
 echo "<pre>";
-print_r($bandex->get('central', $options));
+print_r($bandexUSP->get('central', $options));
+echo "</pre>";
+echo "<hr>";
+
+
+require_once("bandexECP.php");
+
+$bandexECP = new BandexECP();
+
+echo "<h3>Cardápio do RU da ECP para a refeição atual</h3>";
+echo "<pre>";
+print_r($bandexECP->get('ru', $options));
 echo "</pre>";
