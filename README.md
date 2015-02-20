@@ -44,13 +44,23 @@ Onde:
 
 ### Servidor dedicado
  
-Você pode utilizar diretamente a API através do [servidor dedicado] [api]. As funções são homônimas às da classe e os parâmetros são passados via GET. Exemplos:
+Você pode utilizar diretamente a API através do [servidor dedicado] [api]. As funções são homônimas às da classe e os parâmetros são passados via GET. Caso um faculdade seja determinada (`usp` ou `ecp`), a função `get()` deve ser omitida. Exemplos:
 
 ```
-http://denisidoro.info/api/bandejao/usp/?restaurants=quimica
-http://denisidoro.info/api/bandejao/balance?nusp=123456789&pass=senha
+http://api.denisidoro.info/bandejao/usp/?restaurants=quimica
+http://api.denisidoro.info/bandejao/get?restaurants=quimica
+http://api.denisidoro.info/bandejao/balance?nusp=123456789&pass=senha
 ```
+
+
+Notificações no Android
+----
+
+* Instale o [Tasker] [tasker]
+* Crie um time-based profile
+* Faça uma task usando HTTP GET e o `bandex.js`
 
 [date]: http://php.net/manual/en/function.date.php
 [rucard]: https://uspdigital.usp.br/rucard
 [api]: http://denisidoro.info/api/
+[tasker]: https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm
