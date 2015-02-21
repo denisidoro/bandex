@@ -10,7 +10,7 @@ get('quimica'); // Bandejão da Química
 get('fisica,prefeitura'); // Bandejões da Física e da Prefeitura
 ```
 
-Os restaurantes podem ser `central`, `fisica`, `prefeitura`, `quimica` ou `clube`, para a USP e `ru` ou `cafeteria` para a ECP.
+Os restaurantes podem ser `central`, `fisica`, `prefeitura`, `quimica` ou `clube`, para a USP e `ru` ou `cafeteria`, para a ECP.
 
 
 ### Opções
@@ -22,8 +22,8 @@ get($restaurants, $options);
 
 Onde `$options` é uma array com os possíveis parâmetros:
 
-* `days`: array com os índices dos dias cujos cardápios serão retornados, variando de `0` (segunda-feira) até `6` (domingo). Caso seja `-1`, retorna o índice do dia atual;
-* `meals`: array com os índices das refeições cujos cardápios serão retornados, assumindo `0` ou `1` (ou `1` para a ECP). Caso seja `-1`, retorna o índice da refeição atual;
+* `days`: array com os índices dos dias cujos cardápios serão retornados, variando de `0` (segunda-feira) até `6` (domingo). Caso seja um int de valor `-1`, retorna o índice do dia atual;
+* `meals`: array com os índices das refeições cujos cardápios serão retornados, assumindo `0` ou `1` (ou `-1` para a ECP). Caso seja um int de valor `-1`, retorna o índice da refeição atual;
 * `time_format`: formato de tempo, segundo as [convenções em PHP] [date], para os dias da semana;
 * `meal_format`: formato utilizado para as identificar as refeições, podendo ser `numeric` ou `name`;
 * `implode`: se `TRUE`, compacta os resultados em arrays de um elemento, apenas.
@@ -44,7 +44,7 @@ Onde:
 
 ### Servidor dedicado
  
-Você pode utilizar diretamente a API através do [servidor dedicado] [api]. As funções são homônimas às da classe e os parâmetros são passados via GET. Caso um faculdade seja determinada (`usp` ou `ecp`), a função `get()` deve ser omitida. Exemplos:
+Você pode utilizar diretamente a API através do [servidor dedicado] [api]. As funções são homônimas às da classe e os parâmetros são passados via GET (POST será implementada no futuro). Caso uma faculdade seja determinada (`usp` ou `ecp`), a função `get()` é automaticamente chamada. Exemplos:
 
 ```
 http://api.denisidoro.info/bandejao/usp/?restaurants=quimica
